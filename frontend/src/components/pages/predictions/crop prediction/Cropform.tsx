@@ -22,6 +22,8 @@ const Cropform = () => {
     }
 
     try {
+      localStorage.removeItem('topCrops');
+      
       const response = await fetch("https://digitalkissan.onrender.com/predict", {
         method: "POST",
         headers: {
