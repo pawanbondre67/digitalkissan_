@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/popover";
 
 import { User } from "@/components/constants/Interfaces";
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
+import { FaSignInAlt } from "react-icons/fa";
 
 const Header: React.FC = () => {
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Assume user is authenticated initially
+
  const navigate = useNavigate();
 
 
@@ -39,12 +41,20 @@ const Header: React.FC = () => {
       localStorage.removeItem("user"); // Optionally remove user data from local storage
       console.log("User signed out successfully");
       navigate("/login");
+      setIsAuthenticated(false);
       // Redirect to login page or perform other actions
     } catch (error) {
       console.error("Error signing out:", error);
     }
     localStorage.clear();
     window.location.reload();
+  };
+
+
+  const handleLogin = () => {
+    // Perform login logic here
+    navigate("/login");
+    setIsAuthenticated(true); // Set authentication status to true
   };
   
   return (
@@ -63,18 +73,24 @@ const Header: React.FC = () => {
             
           </Link>
 
-          <Popover>
-              <PopoverTrigger>
-                <img
-                  className="h-[35px] w-[35px] rounded-full"
-                  src={result.photoURL}
-                 alt="User Avatar"
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-20 m-4">
-                <h2  onClick={handleLogout} >LogOut</h2>
-              </PopoverContent>
-            </Popover>
+          {isAuthenticated ? (
+        <Popover>
+          <PopoverTrigger>
+            <img
+              className="h-[35px] w-[35px] rounded-full"
+              src={result.photoURL}
+              alt="User Avatar"
+            />
+          </PopoverTrigger>
+          <PopoverContent className="w-20 m-4">
+            <h2 onClick={handleLogout} className="cursor-pointer">LogOut</h2>
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <button onClick={handleLogin} className="login-button">
+          <FaSignInAlt size={24} />
+        </button>
+      )}
         </div>
       </header>
       
